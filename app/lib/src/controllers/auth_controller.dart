@@ -16,6 +16,7 @@ class AuthController extends ChangeNotifier {
 
   Future<void> loginAction(BuildContext context) async {
     state = AuthState.loading;
+    notifyListeners();
     await Future.delayed(const Duration(seconds: 2));
     try {
       const url = 'http://localhost:8080/auth';
