@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
+
 import 'package:providertest/src/controllers/auth_controller.dart';
 
 class AuthScreen extends StatefulWidget {
@@ -9,10 +11,27 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
-  final controller = AuthController();
+  @override
+  void initState() {
+    super.initState();
+    final controller = context.read<AuthController>();
+
+    controller.addListener(() {
+      if (controller.state == AuthState.error) {
+        const snack = SnackBar(content: Text('Erro na autenticação'));
+        ScaffoldMessenger.of(context).showSnackBar(snack);
+      } else if (controller.state == AuthState.success) {
+        if (context.mounted) {
+          Navigator.of(context).pushReplacementNamed('/home');
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
+    final controller = context.watch<AuthController>();
+
     return Scaffold(
       appBar: AppBar(title: const Text('Auth')),
       body: Container(
@@ -44,9 +63,11 @@ class _AuthScreenState extends State<AuthScreen> {
             ),
             const SizedBox(height: 13),
             ElevatedButton(
-              onPressed: () {
-                controller.loginAction(context);
-              },
+              onPressed: controller.state == AuthState.loading
+                  ? null
+                  : () {
+                      controller.loginAction(context);
+                    },
               child: const Text('Login'),
             ),
           ],
