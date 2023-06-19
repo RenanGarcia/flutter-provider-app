@@ -1,4 +1,4 @@
-package com.example.provider
+package com.gurudev.playground.providertest
 
 import io.flutter.embedding.android.FlutterActivity
 
