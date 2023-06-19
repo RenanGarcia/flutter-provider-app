@@ -11,10 +11,12 @@ class AuthScreen extends StatefulWidget {
 }
 
 class _AuthScreenState extends State<AuthScreen> {
+  late AuthController controller;
+
   @override
   void initState() {
     super.initState();
-    final controller = context.read<AuthController>();
+    controller = context.read<AuthController>();
 
     controller.addListener(() {
       if (controller.state == AuthState.error) {
@@ -30,8 +32,6 @@ class _AuthScreenState extends State<AuthScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final controller = context.watch<AuthController>();
-
     return Scaffold(
       appBar: AppBar(title: const Text('Auth')),
       body: Container(
@@ -62,14 +62,14 @@ class _AuthScreenState extends State<AuthScreen> {
               },
             ),
             const SizedBox(height: 13),
-            ElevatedButton(
-              onPressed: controller.state == AuthState.loading
-                  ? null
-                  : () {
-                      controller.loginAction(context);
-                    },
-              child: const Text('Login'),
-            ),
+            Consumer<AuthController>(builder: (ctx, controller, child) {
+              void handler() => controller.loginAction(context);
+              final isLoading = controller.state == AuthState.loading;
+              return ElevatedButton(
+                onPressed: isLoading ? null : handler,
+                child: const Text('Login'),
+              );
+            })
           ],
         ),
       ),
