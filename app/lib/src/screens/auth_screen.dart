@@ -19,15 +19,14 @@ class _AuthScreenState extends State<AuthScreen> {
   void initState() {
     super.initState();
     controller = context.read<AuthController>();
+    final navigator = Navigator.of(context);
 
     controller.addListener(() {
       if (controller.state == AuthState.error) {
         const snack = SnackBar(content: Text('Erro na autenticação'));
         ScaffoldMessenger.of(context).showSnackBar(snack);
       } else if (controller.state == AuthState.success) {
-        if (context.mounted) {
-          Navigator.of(context).pushReplacementNamed('/home');
-        }
+        navigator.pushReplacementNamed('/home');
       }
     });
   }
