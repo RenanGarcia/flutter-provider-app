@@ -3,6 +3,8 @@ import 'package:provider/provider.dart';
 
 import 'package:providertest/src/controllers/auth_controller.dart';
 
+import '../components/auth_button.dart';
+
 class AuthScreen extends StatefulWidget {
   const AuthScreen({super.key});
 
@@ -62,14 +64,7 @@ class _AuthScreenState extends State<AuthScreen> {
               },
             ),
             const SizedBox(height: 13),
-            Consumer<AuthController>(builder: (ctx, controller, child) {
-              void handler() => controller.loginAction(context);
-              final isLoading = controller.state == AuthState.loading;
-              return ElevatedButton(
-                onPressed: isLoading ? null : handler,
-                child: const Text('Login'),
-              );
-            })
+            const AuthButton(),
           ],
         ),
       ),
