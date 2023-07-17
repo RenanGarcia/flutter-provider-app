@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:providertest/src/services/client_http.dart';
 
 import 'controllers/auth_controller.dart';
 import 'screens/splash_screen.dart';
@@ -14,7 +15,10 @@ class App extends StatelessWidget {
   Widget build(BuildContext context) {
     return MultiProvider(
       providers: [
-        ChangeNotifierProvider(create: (_) => AuthController()),
+        Provider(create: (_) => ClientHttp()),
+        ChangeNotifierProvider(
+          create: (context) => AuthController(context.read<ClientHttp>()),
+        ),
       ],
       child: MaterialApp(
         title: 'Flutter Demo',
